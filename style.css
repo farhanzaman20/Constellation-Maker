@@ -1,0 +1,12 @@
+html {
+  text-align: center;
+  background-color: black;
+}
+
+h1, p {
+  color: white;
+}
+
+canvas {
+  border: 1px solid white;
+}
