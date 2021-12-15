@@ -1,7 +1,12 @@
 // Variables
 var cons = [];
-var starClick = {state: false, index: NaN, click: false}; var selectedStar = undefined;
-var actionLog = []; var lastAction; var remakeStar = []; var undoMove = []; var tempUndoMove;
+var starClick = {state: false, index: NaN, click: false}; 
+var selectedStar = undefined;
+var actionLog = []; 
+var lastAction; 
+var remakeStar = []; 
+var undoMove = []; 
+var tempUndoMove;
 
 // Define Canvas
 var cnv = document.querySelector('canvas');
@@ -12,10 +17,10 @@ cnv.addEventListener('contextmenu', event => {event.preventDefault();})
 
 // Mouse Events
 cnv.addEventListener('mousedown', (event) => {
-  event.preventDefault();
+  console.log(window.scrollY);
   // Detecting Whether a Star Was Clicked
   for (let i = 0; i < cons.length; i++) {
-    if (holdCheck(cons[i], event.clientX - cnv.offsetLeft, event.clientY - cnv.offsetTop) == true) {
+    if (holdCheck(cons[i], event.clientX - (cnv.offsetLeft - window.scrollX), event.clientY - (cnv.offsetTop - window.scrollY))) {
       starClick.state = true;
       starClick.index = i;
     }
@@ -27,8 +32,8 @@ cnv.addEventListener('mousedown', (event) => {
     if (starClick.state == false) {
       actionLog.push('madeStar');
       cons.push({
-        x: event.clientX - cnv.offsetLeft, 
-        y: event.clientY - cnv.offsetTop, 
+        x: event.clientX - (cnv.offsetLeft - window.scrollX), 
+        y: event.clientY - (cnv.offsetTop - window.scrollY), 
         selected: false, 
         hidden: false
       });
@@ -42,7 +47,7 @@ cnv.addEventListener('mousedown', (event) => {
         move: false
       }
     }
-  } else if (event.button == 2 && starClick.state == true) {
+  } else if (event.button == 2 && starClick.state) {
     // If right click, select this star
     if (cons[starClick.index].selected == false) {
       if (typeof(selectedStar) != 'undefined') {
@@ -50,7 +55,7 @@ cnv.addEventListener('mousedown', (event) => {
       }
       selectedStar = starClick.index
       cons[selectedStar].selected = true;
-    } else {selectedStar = undefined; cons[starClick.index].selected = false}
+    } else {selectedStar = undefined; cons[starClick.index].selected == false}
     draw();
   }
 })
@@ -76,8 +81,8 @@ document.addEventListener('mouseup', () => {
 // Mouse Move, drags the held star
 cnv.addEventListener('mousemove', (event) => {
   if (starClick.state == true && starClick.click == 'left') {
-    cons[starClick.index].x = event.clientX - cnv.offsetLeft;
-    cons[starClick.index].y = event.clientY - cnv.offsetTop;
+    cons[starClick.index].x = event.clientX - (cnv.offsetLeft - window.scrollX);
+    cons[starClick.index].y = event.clientY - (cnv.offsetTop - window.scrollY);
     tempUndoMove.move = true;
     draw();
   }
@@ -117,7 +122,7 @@ document.addEventListener('keydown', (event) => {
     remakeStar = [];
     cons = [];
     background('black')
-  } else if (event.ctrlKey && event.key == 'z') {// Ctrl Z, undo last action
+  } else if (event.ctrlKey && event.key == 'z' || event.key == 'u') {// Ctrl Z, undo last action
     undoAction();
   } else if (typeof(selectedStar) != 'undefined') {
     if (event.key == 'h') {// H key while selecting a star, hides the star's line
