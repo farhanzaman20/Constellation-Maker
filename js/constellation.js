@@ -17,7 +17,6 @@ cnv.addEventListener('contextmenu', event => {event.preventDefault();})
 
 // Mouse Events
 cnv.addEventListener('mousedown', (event) => {
-  console.log(window.scrollY);
   // Detecting Whether a Star Was Clicked
   for (let i = 0; i < cons.length; i++) {
     if (holdCheck(cons[i], event.clientX - (cnv.offsetLeft - window.scrollX), event.clientY - (cnv.offsetTop - window.scrollY))) {
